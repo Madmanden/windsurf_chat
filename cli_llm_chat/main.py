@@ -145,7 +145,8 @@ def chat(
     
     while True:
         # Get user input
-        user_input = console.input("\n[bold blue]Q:[/bold blue] ")
+        console.print("\n")
+        user_input = console.input(format_user_message("Type your message here...").prompt)
         
         # Handle special commands
         if user_input.lower() == "/exit":

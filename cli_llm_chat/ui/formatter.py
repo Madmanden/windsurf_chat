@@ -6,9 +6,12 @@ import re
 from rich.markdown import Markdown
 from rich.text import Text
 from rich.console import Console
+from rich.panel import Panel
+from rich.style import Style
+from rich.syntax import Syntax
 
 
-def format_message(message: str, verbosity: str = "brief") -> str:
+def format_message(message: str, verbosity: str = "brief") -> Panel:
     """
     Format a message for display in the terminal
     
@@ -17,12 +20,32 @@ def format_message(message: str, verbosity: str = "brief") -> str:
         verbosity: The level of verbosity for the message
         
     Returns:
-        Formatted message as a string
+        Formatted message as a Rich Panel object
     """
+    style = Style(color="green", bold=False)
+    
     if verbosity == "brief":
-        return message.strip()
+        content = message.strip()
     else:
-        return str(Markdown(f"**Detailed Response:**\n\n{message}"))
+        content = str(Markdown(f"**Detailed Response:**\n\n{message}"))
+    
+    return Panel(
+        content,
+        border_style="blue",
+        title="Assistant" if verbosity == "brief" else "Assistant (Detailed)",
+        title_align="left",
+        style=style
+    )
+
+def format_user_message(message: str) -> Panel:
+    """Format user message with a distinct style"""
+    return Panel(
+        message,
+        border_style="yellow",
+        title="User",
+        title_align="left",
+        style="yellow"
+    )
 
 
 def format_code_blocks(message: str) -> str:
@@ -35,13 +58,14 @@ def format_code_blocks(message: str) -> str:
     Returns:
         Message with enhanced code block formatting
     """
-    # Replace triple backtick code blocks with Rich syntax
+    # Replace triple backtick code blocks with Rich syntax highlighting
     pattern = r"```(\w+)?\n(.*?)```"
     
     def replace_code_block(match):
-        language = match.group(1) or ""
+        language = match.group(1) or "text"
         code = match.group(2)
-        return f"\n[bold purple]```{language}[/bold purple]\n[dim]{code}[/dim]\n[bold purple]```[/bold purple]"
+        syntax = Syntax(code.strip(), language, theme="monokai", line_numbers=True)
+        return f"\n{syntax}\n"
     
     return re.sub(pattern, replace_code_block, message, flags=re.DOTALL)
 

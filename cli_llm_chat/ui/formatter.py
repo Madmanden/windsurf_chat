@@ -42,23 +42,23 @@ def format_message(message: str, verbosity: str = "brief") -> Panel:
         padding=(1, 2)
     )
 
-def format_user_message(message: str, include_prompt: bool = False) -> Panel:
+def format_user_message(message: str, include_prompt: bool = False) -> str:
     """Format user message with a distinct style"""
-    # Convert message to Markdown
-    md = Markdown(message, code_theme="monokai", hyperlinks=True)
-    content = [md]
+    # Create a temporary console for rendering
+    temp_console = Console(record=True)
+    temp_console.print(message)
+    content = temp_console.export_text()
     
-    if include_prompt:
-        content.append("\n[yellow]> [/yellow]")
-    
-    return Panel(
-        "".join(str(c) for c in content),
+    panel = Panel(
+        content.strip(),
         border_style="yellow",
         title="User",
         title_align="left",
         style="yellow",
         padding=(1, 2)
     )
+    
+    return str(panel)
 
 
 def format_code_blocks(message: str) -> str:

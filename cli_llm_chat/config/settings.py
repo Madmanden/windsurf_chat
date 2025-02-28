@@ -41,6 +41,13 @@ def get_config_file() -> Path:
     return get_config_dir() / "config.json"
 
 
+DEFAULT_CONFIG = {
+    "response_verbosity": "brief",  # 'brief' or 'detailed'
+    "api_key": None,
+    "default_model": "google/gemini-2.0-flash-001",
+}
+
+
 def load_config() -> Dict[str, Any]:
     """
     Load configuration from file
@@ -48,7 +55,7 @@ def load_config() -> Dict[str, Any]:
     Returns:
         Configuration dictionary
     """
-    config = {}
+    config = DEFAULT_CONFIG.copy()
     
     # First try to load from .env file
     load_dotenv()
@@ -56,12 +63,16 @@ def load_config() -> Dict[str, Any]:
     # Check for environment variables
     api_key = os.environ.get("OPENROUTER_API_KEY")
     default_model = os.environ.get("DEFAULT_MODEL")
+    response_verbosity = os.environ.get("RESPONSE_VERBOSITY")
     
     if api_key:
         config["api_key"] = api_key
     
     if default_model:
         config["default_model"] = default_model
+    
+    if response_verbosity:
+        config["response_verbosity"] = response_verbosity
     
     # Then try to load from config file (overrides env vars)
     config_file = get_config_file()

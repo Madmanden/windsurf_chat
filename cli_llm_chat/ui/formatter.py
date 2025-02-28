@@ -8,18 +8,21 @@ from rich.text import Text
 from rich.console import Console
 
 
-def format_message(message: str) -> Markdown:
+def format_message(message: str, verbosity: str = "brief") -> str:
     """
     Format a message for display in the terminal
     
     Args:
         message: The message text to format
+        verbosity: The level of verbosity for the message
         
     Returns:
-        Formatted message as a Rich Markdown object
+        Formatted message as a string
     """
-    # Process the message as markdown
-    return Markdown(message)
+    if verbosity == "brief":
+        return message.strip()
+    else:
+        return str(Markdown(f"**Detailed Response:**\n\n{message}"))
 
 
 def format_code_blocks(message: str) -> str:

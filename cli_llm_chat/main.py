@@ -236,6 +236,11 @@ def config_set(
     default_model: str = typer.Option(
         None, "--default-model", help="Default model to use"
     ),
+    response_verbosity: str = typer.Option(
+        None, "--response-verbosity",
+        help="Set response style: 'brief' for concise, 'detailed' for explanations (options: brief/detailed)",
+        callback=lambda ctx, param, value: value if value in ["brief", "detailed"] else typer.BadParameter("Must be 'brief' or 'detailed'")
+    ),
 ):
     """Set configuration values"""
     global config
@@ -248,7 +253,7 @@ def config_set(
         api_key = current_config.get('api_key')
     
     # If no API key is provided and we're not just updating the model
-    elif api_key is None and default_model is None:
+    elif api_key is None and default_model is None and response_verbosity is None:
         api_key = Prompt.ask("Enter your OpenRouter API key", password=True)
         
         # Validate API key format
@@ -273,7 +278,7 @@ def config_set(
                 console.print("Configuration not updated.")
                 return
     
-    if default_model is None and api_key is not None:
+    if default_model is None and api_key is not None and response_verbosity is None:
         default_model = Prompt.ask(
             "Enter default model", 
             default="google/gemini-2.0-flash-001"
@@ -287,6 +292,10 @@ def config_set(
     if default_model is not None:
         config["default_model"] = default_model
         console.print(f"Default model set to: {default_model}", style="green")
+    
+    if response_verbosity is not None:
+        config["response_verbosity"] = response_verbosity
+        console.print(f"Response verbosity set to: {response_verbosity}", style="green")
     
     # Save configuration
     save_config(config)
@@ -302,6 +311,7 @@ def config_set(
         console.print("API Key: [dim]Not set[/dim]")
     
     console.print(f"Default Model: {config.get('default_model', '[dim]Not set[/dim]')}")
+    console.print(f"Response Verbosity: {config.get('response_verbosity', '[dim]Not set[/dim]')}")
 
 
 @app.command()
@@ -383,6 +393,13 @@ def debug():
         console.print(f"✅ Default model is set to: {default_model}")
     else:
         console.print("❌ Default model is not set")
+    
+    # Check response verbosity
+    response_verbosity = config.get("response_verbosity")
+    if response_verbosity:
+        console.print(f"✅ Response verbosity is set to: {response_verbosity}")
+    else:
+        console.print("❌ Response verbosity is not set")
     
     # Test API connectivity
     if api_key:

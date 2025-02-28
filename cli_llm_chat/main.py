@@ -14,7 +14,7 @@ from rich.prompt import Prompt
 from typing import Optional, List, Dict, Any
 import requests
 import os
-from cli_llm_chat.ui.formatter import format_message
+from cli_llm_chat.ui.formatter import format_message, format_user_message
 
 from cli_llm_chat.api.openrouter import OpenRouterClient
 from cli_llm_chat.config.settings import (

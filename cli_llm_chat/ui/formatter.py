@@ -24,27 +24,35 @@ def format_message(message: str, verbosity: str = "brief") -> Panel:
     """
     style = Style(color="green", bold=False)
     
+    # Process code blocks first
+    message = format_code_blocks(message)
+    
+    # Convert message to Markdown
     if verbosity == "brief":
-        content = message.strip()
+        md = Markdown(message.strip(), code_theme="monokai", hyperlinks=True)
     else:
-        content = str(Markdown(f"**Detailed Response:**\n\n{message}"))
+        md = Markdown(f"**Detailed Response:**\n\n{message}", code_theme="monokai", hyperlinks=True)
     
     return Panel(
-        content,
+        md,
         border_style="blue",
         title="Assistant" if verbosity == "brief" else "Assistant (Detailed)",
         title_align="left",
-        style=style
+        style=style,
+        padding=(1, 2)
     )
 
 def format_user_message(message: str) -> Panel:
     """Format user message with a distinct style"""
+    # Convert message to Markdown
+    md = Markdown(message, code_theme="monokai", hyperlinks=True)
     return Panel(
-        message,
+        md,
         border_style="yellow",
         title="User",
         title_align="left",
-        style="yellow"
+        style="yellow",
+        padding=(1, 2)
     )
 
 
@@ -63,9 +71,9 @@ def format_code_blocks(message: str) -> str:
     
     def replace_code_block(match):
         language = match.group(1) or "text"
-        code = match.group(2)
-        syntax = Syntax(code.strip(), language, theme="monokai", line_numbers=True)
-        return f"\n{syntax}\n"
+        code = match.group(2).strip()
+        # Keep the markdown format but ensure proper spacing
+        return f"\n```{language}\n{code}\n```\n"
     
     return re.sub(pattern, replace_code_block, message, flags=re.DOTALL)
 

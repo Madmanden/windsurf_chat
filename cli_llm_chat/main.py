@@ -46,12 +46,12 @@ config = load_config()
 @app.callback(invoke_without_command=True)
 def main(
     ctx: typer.Context,
-    message: Optional[str] = typer.Option(None, "--message", "-m", help="Single message to send (non-interactive mode)"),
+    message: Optional[str] = typer.Option(None, "--message", "-m", "-msg", help="Single message to send (non-interactive mode)"),
     model: str = typer.Option(None, "--model", help="Model to use for chat"),
-    temperature: float = typer.Option(0.7, "--temperature", "-t", help="Temperature for response generation"),
+    temperature: float = typer.Option(0.7, "--temperature", "-t", "-temp", help="Temperature for response generation"),
     max_tokens: int = typer.Option(1000, "--max-tokens", help="Maximum tokens in response"),
     debug: bool = typer.Option(False, "--debug", help="Show debug information"),
-    conversation: str = typer.Option(None, "--conversation", "-c", help="Name of the conversation to continue or create"),
+    conversation: str = typer.Option(None, "--conversation", "-c", "-conv", help="Name of the conversation to continue or create"),
 ):
     """CLI LLM Chat - A command-line interface for chatting with LLMs via OpenRouter"""
     # If no command is provided, run the chat command
@@ -63,12 +63,12 @@ conversation_history = {}
 
 @app.command()
 def chat(
-    message: Optional[str] = typer.Option(None, "--message", "-m", help="Single message to send (non-interactive mode)"),
+    message: Optional[str] = typer.Option(None, "--message", "-m", "-msg", help="Single message to send (non-interactive mode)"),
     model: str = typer.Option(None, "--model", help="Model to use for chat"),
-    temperature: float = typer.Option(0.7, "--temperature", "-t", help="Temperature for response generation"),
+    temperature: float = typer.Option(0.7, "--temperature", "-t", "-temp", help="Temperature for response generation"),
     max_tokens: int = typer.Option(1000, "--max-tokens", help="Maximum tokens in response"),
     debug: bool = typer.Option(False, "--debug", help="Show debug information"),
-    conversation: str = typer.Option(None, "--conversation", "-c", help="Name of the conversation to continue or create"),
+    conversation: str = typer.Option(None, "--conversation", "-c", "-conv", help="Name of the conversation to continue or create"),
 ):
     """
     Start a chat session with an LLM

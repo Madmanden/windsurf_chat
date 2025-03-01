@@ -177,8 +177,7 @@ def chat(
     # Interactive mode
     terminal = TerminalUI()
     
-    def handle_input(user_input):
-        nonlocal conversation_history, conversation
+    def handle_input(user_input, conversation_history=conversation_history, conversation=conversation):
         
         # Handle special commands
         if user_input.lower() == "/clear":

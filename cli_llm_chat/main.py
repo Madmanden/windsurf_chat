@@ -43,22 +43,6 @@ app = typer.Typer(
 # Initialize console
 console = Console()
 
-@app.callback()
-def main(
-    ctx: typer.Context,
-    message: Optional[str] = typer.Option(None, "--message", "-m", "-msg", help="Single message to send (non-interactive mode)"),
-    model: str = typer.Option(None, "--model", help="Model to use for chat"),
-    temperature: float = typer.Option(0.7, "--temperature", "-t", "-temp", help="Temperature for response generation"),
-    max_tokens: int = typer.Option(1000, "--max-tokens", help="Maximum tokens in response"),
-    debug: bool = typer.Option(False, "--debug", help="Show debug information"),
-    conversation: str = typer.Option(None, "--conversation", "-c", "-conv", help="Name of the conversation to continue or create"),
-):
-    """
-    CLI LLM Chat - A command-line interface for chatting with LLMs via OpenRouter
-    """
-    # This is just the callback function, actual commands are defined below
-    pass
-
 # Global state
 conversation_history = {}
 

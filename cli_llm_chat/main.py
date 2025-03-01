@@ -30,6 +30,8 @@ import uuid
 import dotenv
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.styles import Style
+from prompt_toolkit.cursor import CursorStyle
 from pathlib import Path
 
 # Load environment variables
@@ -168,11 +170,16 @@ def chat(
     # Interactive mode
     console.print("\nType your messages below. Type /exit to end the session, /clear to clear history, or /help for more commands.")
     
-    # Set up command history
+    # Set up command history and styling
     history_file = Path(get_config_dir()) / "command_history"
+    style = Style.from_dict({
+        'prompt': 'ansiyellow',
+    })
     session = PromptSession(
         history=FileHistory(str(history_file)),
-        message='> '
+        message=[("class:prompt", "> ")],
+        style=style,
+        cursor=CursorStyle.BLINKING_BLOCK
     )
     
     while True:

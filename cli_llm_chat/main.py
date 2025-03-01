@@ -117,11 +117,11 @@ def chat(
         if debug:
             console.print(f"[yellow]Current verbosity setting: {verbosity}[/yellow]")
             
-        system_message = (
-            "You are a helpful AI assistant. IMPORTANT: Always provide brief, concise responses of 1-3 sentences maximum. Keep explanations minimal."
-            if verbosity == "brief" else
-            "You are a helpful AI assistant. IMPORTANT: Provide detailed, thorough responses with in-depth explanations, examples, and relevant context. Take time to explore topics comprehensively."
-        )
+        system_message = {
+            "short": "You are a helpful AI assistant. IMPORTANT: Always provide concise responses of 1-5 lines maximum. Keep explanations minimal and focused.",
+            "medium": "You are a helpful AI assistant. IMPORTANT: Provide balanced responses between 5-15 lines. Include key details and brief examples while maintaining clarity.",
+            "long": "You are a helpful AI assistant. IMPORTANT: Provide comprehensive responses with detailed explanations, relevant examples, and thorough context. Focus on depth and completeness."
+        }[verbosity]
         conversation_history[conversation].append({
             "role": "system",
             "content": system_message
@@ -259,8 +259,8 @@ def config_set(
     ),
     response_verbosity: str = typer.Option(
         None, "--response-verbosity",
-        help="Set response style: 'brief' for 1-3 sentence responses, 'detailed' for thorough explanations with examples (options: brief/detailed)",
-        callback=lambda ctx, param, value: value if value in ["brief", "detailed"] else typer.BadParameter("Must be 'brief' or 'detailed'")
+        help="Set response length: 'short' (1-5 lines), 'medium' (5-15 lines), or 'long' (detailed explanations)",
+        callback=lambda ctx, param, value: value if value in ["short", "medium", "long"] else typer.BadParameter("Must be 'short', 'medium', or 'long'")
     ),
 ):
     """Set configuration values"""

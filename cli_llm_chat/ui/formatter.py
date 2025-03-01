@@ -33,7 +33,7 @@ def format_message(message: str, verbosity: str = "brief") -> Panel:
     return Panel(
         md,
         border_style="blue",
-        title="Assistant" if verbosity == "brief" else "Assistant (Detailed)",
+        title=f"Assistant ({verbosity.title()})",
         title_align="left",
         style=style,
         padding=(1, 2)

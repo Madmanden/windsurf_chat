@@ -31,7 +31,7 @@ import dotenv
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
-from prompt_toolkit.enums import EditingMode
+from prompt_toolkit.formatted_text import HTML
 from pathlib import Path
 
 # Load environment variables
@@ -177,9 +177,12 @@ def chat(
     })
     session = PromptSession(
         history=FileHistory(str(history_file)),
-        message=[("class:prompt", "> ")],
-        style=style,
-        editing_mode=EditingMode.VI  # This gives us a blinking block cursor
+        message=HTML('<ansiyellow>> </ansiyellow>'),
+        enable_history_search=True,
+        enable_suspend=True,
+        mouse_support=True,
+        complete_while_typing=True,
+        enable_open_in_editor=True
     )
     
     while True:

@@ -40,6 +40,11 @@ app = typer.Typer(
     add_completion=False
 )
 
+@app.callback()
+def main():
+    """CLI LLM Chat - A command-line interface for chatting with LLMs via OpenRouter"""
+    pass
+
 # Initialize console
 console = Console()
 

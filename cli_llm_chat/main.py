@@ -73,7 +73,10 @@ def chat(
     """
     Start a chat session with an LLM
     """
-    global conversation_history
+    global conversation_history, config
+    
+    # Reload config to get latest settings
+    config = load_config()
     
     # Get API key from config
     api_key = config.get("api_key", os.getenv("OPENROUTER_API_KEY", ""))

@@ -247,7 +247,7 @@ def config_set(
     ),
     response_verbosity: str = typer.Option(
         None, "--response-verbosity",
-        help="Set response style: 'brief' for concise, 'detailed' for explanations (options: brief/detailed)",
+        help="Set response style: 'brief' for 1-3 sentence responses, 'detailed' for thorough explanations with examples (options: brief/detailed)",
         callback=lambda ctx, param, value: value if value in ["brief", "detailed"] else typer.BadParameter("Must be 'brief' or 'detailed'")
     ),
 ):

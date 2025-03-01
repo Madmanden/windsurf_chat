@@ -197,8 +197,17 @@ def chat(
             else:
                 console.print("Please provide a name for the conversation", style="red")
             continue
-        elif user_input.lower().startswith("/verbosity "):
-            new_verbosity = user_input[10:].strip().lower()
+        elif user_input.lower().startswith("/verbosity ") or user_input.lower() in ["/vs", "/vm", "/vl"]:
+            # Handle shortcut commands
+            if user_input.lower() == "/vs":
+                new_verbosity = "short"
+            elif user_input.lower() == "/vm":
+                new_verbosity = "medium"
+            elif user_input.lower() == "/vl":
+                new_verbosity = "long"
+            else:
+                new_verbosity = user_input[10:].strip().lower()
+                
             if new_verbosity in ["short", "medium", "long"]:
                 config["verbosity"] = new_verbosity
                 save_config(config)

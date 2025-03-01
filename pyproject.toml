@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cli-llm-chat"
+version = "0.1.0"
+description = "CLI app for chatting with LLMs via OpenRouter API"
+authors = [
+    {name = "User", email = "user@example.com"},
+]
+requires-python = ">=3.9"
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.5.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+llmchat = "cli_llm_chat.main:app"

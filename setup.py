@@ -11,10 +11,11 @@ setup(
         "requests>=2.31.0",
         "python-dotenv>=1.0.0",
     ],
-    entry_points="""
-        [console_scripts]
-        llmchat=cli_llm_chat.main:app
-    """,
+    entry_points={
+        'console_scripts': [
+            'llmchat=cli_llm_chat.main:app.run',
+        ],
+    },
     python_requires=">=3.9",
     author="User",
     author_email="user@example.com",

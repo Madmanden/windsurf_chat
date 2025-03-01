@@ -28,8 +28,9 @@ from cli_llm_chat.config.settings import (
 )
 import uuid
 import dotenv
-from prompt_toolkit import PromptSession
+from prompt_toolkit import PromptSession, HTML
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.styles import Style
 from pathlib import Path
 
 # Load environment variables
@@ -168,15 +169,22 @@ def chat(
     # Interactive mode
     console.print("\nType your messages below. Type /exit to end the session, /clear to clear history, or /help for more commands.")
     
-    # Set up command history
+    # Set up command history and styling
     history_file = Path(get_config_dir()) / "command_history"
-    session = PromptSession(history=FileHistory(str(history_file)))
+    style = Style.from_dict({
+        'prompt': 'ansiyellow',
+    })
+    session = PromptSession(
+        history=FileHistory(str(history_file)),
+        style=style,
+        message=HTML('<prompt>Type your message here...</prompt>\n> ')
+    )
     
     while True:
         # Get user input with history support
         console.print("\n")
         try:
-            user_input = session.prompt("[Type your message here...] > ")
+            user_input = session.prompt()
         except KeyboardInterrupt:
             # Handle Ctrl+C gracefully
             console.print("\n[yellow]Exiting chat...[/yellow]")

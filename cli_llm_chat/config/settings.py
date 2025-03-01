@@ -48,6 +48,49 @@ DEFAULT_CONFIG = {
 }
 
 
+def get_api_key(config: Dict[str, Any]) -> str:
+    """
+    Get API key from config or environment variable
+    
+    Args:
+        config: Configuration dictionary
+        
+    Returns:
+        API key string or None if not found
+    """
+    # Load environment variables
+    load_dotenv()
+    
+    # Try to get API key from environment variable
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    
+    # If not found in environment, try config
+    if not api_key and config and "api_key" in config:
+        api_key = config["api_key"]
+    
+    return api_key
+
+
+def validate_api_key(api_key: str) -> bool:
+    """
+    Validate API key format
+    
+    Args:
+        api_key: API key to validate
+        
+    Returns:
+        True if valid, False otherwise
+    """
+    if not api_key:
+        return False
+    
+    # Basic validation: Check if it's a non-empty string with reasonable length
+    if not isinstance(api_key, str) or len(api_key) < 8:
+        return False
+    
+    return True
+
+
 def load_config() -> Dict[str, Any]:
     """
     Load configuration from file

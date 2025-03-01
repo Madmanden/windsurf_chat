@@ -31,7 +31,7 @@ import dotenv
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
-from prompt_toolkit.cursor import CursorStyle
+from prompt_toolkit.enums import EditingMode
 from pathlib import Path
 
 # Load environment variables
@@ -179,7 +179,7 @@ def chat(
         history=FileHistory(str(history_file)),
         message=[("class:prompt", "> ")],
         style=style,
-        cursor=CursorStyle.BLINKING_BLOCK
+        editing_mode=EditingMode.VI  # This gives us a blinking block cursor
     )
     
     while True:

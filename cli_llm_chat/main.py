@@ -177,6 +177,14 @@ def chat(
         console.print("\n")
         try:
             user_input = session.prompt("[Type your message here...] > ")
+        except KeyboardInterrupt:
+            # Handle Ctrl+C gracefully
+            console.print("\n[yellow]Exiting chat...[/yellow]")
+            break
+        except EOFError:
+            # Handle Ctrl+D gracefully
+            console.print("\n[yellow]Exiting chat...[/yellow]")
+            break
         
         # Handle special commands
         if user_input.lower() == "/exit":

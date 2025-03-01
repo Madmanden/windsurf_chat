@@ -287,8 +287,7 @@ def config_set(
     ),
     verbosity: str = typer.Option(
         None, "--verbosity", "-v",
-        help="Set response length: 'short' (1-5 lines), 'medium' (5-15 lines), or 'long' (detailed explanations)",
-        callback=lambda ctx, param, value: value if value in ["short", "medium", "long"] else typer.BadParameter("Must be 'short', 'medium', or 'long'")
+        help="Set response length: 'short' (1-5 lines), 'medium' (5-15 lines), or 'long' (detailed explanations)"
     ),
 ):
     """Set configuration values"""
@@ -343,6 +342,9 @@ def config_set(
         console.print(f"Default model set to: {default_model}", style="green")
     
     if verbosity is not None:
+        if verbosity not in ["short", "medium", "long"]:
+            console.print("Error: Verbosity must be 'short', 'medium', or 'long'", style="red")
+            return
         config["verbosity"] = verbosity
         console.print(f"Verbosity set to: {verbosity}", style="green")
     

@@ -145,7 +145,8 @@ def chat(
             
             # Display formatted response
             console.print("\n[bold green]A:[/bold green]")
-            console.print(format_message(assistant_message))
+            verbosity = config.get("response_verbosity", "medium")
+            console.print(format_message(assistant_message, verbosity=verbosity))
             
             # Add assistant message to history
             conversation_history[conversation].append({"role": "assistant", "content": assistant_message})
@@ -243,7 +244,8 @@ def chat(
             
             # Display formatted response
             console.print("\n[bold green]A:[/bold green]")
-            console.print(format_message(assistant_message))
+            verbosity = config.get("response_verbosity", "medium")
+            console.print(format_message(assistant_message, verbosity=verbosity))
             
         except Exception as e:
             console.print(f"\n[bold red]Error:[/bold red] {str(e)}")

@@ -23,10 +23,14 @@ from cli_llm_chat.config.settings import (
     save_conversation, 
     load_conversation, 
     list_conversations,
-    get_config_file
+    get_config_file,
+    get_config_dir
 )
 import uuid
 import dotenv
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import FileHistory
+from pathlib import Path
 
 # Load environment variables
 dotenv.load_dotenv()
@@ -164,11 +168,15 @@ def chat(
     # Interactive mode
     console.print("\nType your messages below. Type /exit to end the session, /clear to clear history, or /help for more commands.")
     
+    # Set up command history
+    history_file = Path(get_config_dir()) / "command_history"
+    session = PromptSession(history=FileHistory(str(history_file)))
+    
     while True:
-        # Get user input
+        # Get user input with history support
         console.print("\n")
-        prompt = "Type your message here...\n> "
-        user_input = console.input(f"[yellow]{prompt}[/yellow]")
+        try:
+            user_input = session.prompt("[Type your message here...] > ")
         
         # Handle special commands
         if user_input.lower() == "/exit":

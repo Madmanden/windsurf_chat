@@ -297,14 +297,8 @@ def config_set(
     # Load current configuration
     current_config = load_config()
     
-    # If API key is 'keep', use the existing one
-    if api_key == 'keep':
-        api_key = current_config.get('api_key')
-    
-    # If no API key is provided and we're not just updating the model
-    elif api_key is None and default_model is None and verbosity is None:
-        api_key = Prompt.ask("Enter your OpenRouter API key", password=True)
-        
+    # If API key is provided, validate it
+    if api_key and api_key != 'keep':
         # Validate API key format
         if not api_key.startswith("sk-or-"):
             console.print("[yellow]Warning: API key does not start with 'sk-or-'[/yellow]")
@@ -326,6 +320,12 @@ def config_set(
             if not confirm:
                 console.print("Configuration not updated.")
                 return
+    # If API key is 'keep', use the existing one
+    elif api_key == 'keep':
+        api_key = current_config.get('api_key')
+    # If no API key is provided and we're not just updating other settings
+    elif api_key is None and default_model is None and verbosity is None:
+        api_key = Prompt.ask("Enter your OpenRouter API key", password=True)
     
     if default_model is None and api_key is not None and verbosity is None:
         default_model = Prompt.ask(

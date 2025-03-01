@@ -202,6 +202,14 @@ def chat(
             if new_verbosity in ["short", "medium", "long"]:
                 config["verbosity"] = new_verbosity
                 save_config(config)
+                # Update system message for new verbosity
+                system_message = {
+                    "short": "You are a helpful AI assistant. IMPORTANT: Always provide concise responses of 1-5 lines maximum. Keep explanations minimal and focused.",
+                    "medium": "You are a helpful AI assistant. IMPORTANT: Provide balanced responses between 5-15 lines. Include key details and brief examples while maintaining clarity.",
+                    "long": "You are a helpful AI assistant. IMPORTANT: Provide comprehensive responses with detailed explanations, relevant examples, and thorough context. Focus on depth and completeness."
+                }[new_verbosity]
+                # Replace the first message (system message) with updated verbosity
+                conversation_history[conversation][0] = {"role": "system", "content": system_message}
                 console.print(f"Verbosity changed to: {new_verbosity}", style="green")
             else:
                 console.print("Invalid verbosity level. Use 'short', 'medium', or 'long'", style="red")

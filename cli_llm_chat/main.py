@@ -8,6 +8,7 @@ import os
 import json
 import typer
 from rich.console import Console
+from rich.pager import Pager
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
@@ -45,6 +46,7 @@ app = typer.Typer(
 
 # Initialize Rich console
 console = Console()
+pager = Pager()
 
 # Load configuration
 config = load_config()
@@ -150,10 +152,12 @@ def chat(
             
             assistant_message = response.get("choices", [{}])[0].get("message", {}).get("content", "")
             
-            # Display formatted response
+            # Display formatted response with paging support
             console.print("\n")
             verbosity = config.get("verbosity", "medium")
-            console.print(format_message(assistant_message, verbosity=verbosity))
+            formatted_message = format_message(assistant_message, verbosity=verbosity)
+            with console.pager():
+                console.print(formatted_message)
             
             # Add assistant message to history
             conversation_history[conversation].append({"role": "assistant", "content": assistant_message})
@@ -298,10 +302,12 @@ def chat(
             # Save conversation after each message
             save_conversation(conversation, conversation_history[conversation])
             
-            # Display formatted response
+            # Display formatted response with paging support
             console.print("\n")
             verbosity = config.get("verbosity", "medium")
-            console.print(format_message(assistant_message, verbosity=verbosity))
+            formatted_message = format_message(assistant_message, verbosity=verbosity)
+            with console.pager():
+                console.print(formatted_message)
             
         except Exception as e:
             console.print(f"\n[bold red]Error:[/bold red] {str(e)}")

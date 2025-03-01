@@ -15,6 +15,7 @@ from typing import Optional, List, Dict, Any
 import requests
 import os
 from cli_llm_chat.ui.formatter import format_message, format_user_message
+from cli_llm_chat.ui.terminal import TerminalUI
 
 from cli_llm_chat.api.openrouter import OpenRouterClient
 from cli_llm_chat.config.settings import (
@@ -174,36 +175,90 @@ def chat(
         return
     
     # Interactive mode
-    console.print("\nType your messages below. Type /exit to end the session, /clear to clear history, or /help for more commands.")
+    terminal = TerminalUI()
     
-    # Set up command history and styling
-    history_file = Path(get_config_dir()) / "command_history"
-    style = Style.from_dict({
-        'prompt': 'ansiyellow',
-    })
-    session = PromptSession(
-        history=FileHistory(str(history_file)),
-        message=HTML('<ansiyellow>> </ansiyellow>'),
-        enable_history_search=True,
-        enable_suspend=True,
-        mouse_support=True,
-        complete_while_typing=True,
-        enable_open_in_editor=True
-    )
-    
-    while True:
-        # Get user input with history support
-        console.print("\n")
+    def handle_input(user_input):
+        nonlocal conversation_history, conversation
+        
+        # Handle special commands
+        if user_input.lower() == "/clear":
+            conversation_history[conversation] = []
+            terminal.append_message("System", "Conversation history cleared.")
+            return
+        elif user_input.lower() == "/help":
+            help_text = """
+Available commands:
+  /exit - Exit the chat session
+  /clear - Clear conversation history
+  /save <name> - Save the current conversation
+  /list - List all saved conversations
+  /load <name> - Load a saved conversation
+  /help - Show this help message"""
+            terminal.append_message("System", help_text)
+            return
+        elif user_input.lower().startswith("/save "):
+            new_name = user_input[6:].strip()
+            if new_name:
+                save_conversation(new_name, conversation_history[conversation])
+                conversation = new_name
+                terminal.append_message("System", f"Conversation saved as: {new_name}")
+            else:
+                terminal.append_message("System", "Please provide a name for the conversation")
+            return
+        elif user_input.lower() == "/list":
+            conversations = list_conversations()
+            if conversations:
+                terminal.append_message("System", "Saved conversations:\n" + "\n".join(f"  {conv}" for conv in conversations))
+            else:
+                terminal.append_message("System", "No saved conversations found.")
+            return
+        elif user_input.lower().startswith("/load "):
+            conv_name = user_input[6:].strip()
+            if conv_name:
+                loaded_messages = load_conversation(conv_name)
+                if loaded_messages:
+                    conversation = conv_name
+                    conversation_history[conversation] = loaded_messages
+                    terminal.append_message("System", f"Loaded conversation: {conv_name} with {len(loaded_messages)} messages")
+                else:
+                    terminal.append_message("System", f"Conversation not found: {conv_name}")
+            else:
+                terminal.append_message("System", "Please provide a name of the conversation to load")
+            return
+        
+        # Add user message to history
+        conversation_history[conversation].append({"role": "user", "content": user_input})
+        
         try:
-            user_input = session.prompt()
-        except KeyboardInterrupt:
-            # Handle Ctrl+C gracefully
-            console.print("\n[yellow]Exiting chat...[/yellow]")
-            break
-        except EOFError:
-            # Handle Ctrl+D gracefully
-            console.print("\n[yellow]Exiting chat...[/yellow]")
-            break
+            # Get response from API
+            response = client.chat_completion(
+                model=model,
+                messages=conversation_history[conversation],
+                temperature=temperature,
+                max_tokens=max_tokens,
+                debug=debug
+            )
+            
+            assistant_message = response.get("choices", [{}])[0].get("message", {}).get("content", "")
+            
+            # Add assistant message to history
+            conversation_history[conversation].append({"role": "assistant", "content": assistant_message})
+            
+            # Save conversation after each message
+            save_conversation(conversation, conversation_history[conversation])
+            
+            # Display formatted response
+            terminal.append_message("Assistant", assistant_message)
+            
+        except Exception as e:
+            terminal.append_message("System", f"Error: {str(e)}")
+    
+    try:
+        terminal.run(on_input=handle_input)
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Exiting chat...[/yellow]")
+    except EOFError:
+        console.print("\n[yellow]Exiting chat...[/yellow]")
         
         # Handle special commands
         if user_input.lower() == "/exit":

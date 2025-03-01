@@ -80,7 +80,7 @@ def chat(
     config = load_config()
     
     # Get API key from config
-    api_key = config.get("api_key", os.getenv("OPENROUTER_API_KEY", ""))
+    api_key = config.get("api_key") or os.getenv("OPENROUTER_API_KEY", "")
     
     if not api_key:
         console.print("[bold red]Error:[/bold red] API key not found. Please set it using the config_set command.")

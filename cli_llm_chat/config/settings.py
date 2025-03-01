@@ -63,7 +63,7 @@ def load_config() -> Dict[str, Any]:
     # Check for environment variables
     api_key = os.environ.get("OPENROUTER_API_KEY")
     default_model = os.environ.get("DEFAULT_MODEL")
-    response_verbosity = os.environ.get("RESPONSE_VERBOSITY")
+    verbosity = os.environ.get("VERBOSITY")
     
     if api_key:
         config["api_key"] = api_key
@@ -71,8 +71,8 @@ def load_config() -> Dict[str, Any]:
     if default_model:
         config["default_model"] = default_model
     
-    if response_verbosity:
-        config["response_verbosity"] = response_verbosity
+    if verbosity:
+        config["verbosity"] = verbosity
     
     # Then try to load from config file (overrides env vars)
     config_file = get_config_file()

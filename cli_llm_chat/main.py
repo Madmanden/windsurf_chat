@@ -276,7 +276,7 @@ def config_set(
         api_key = current_config.get('api_key')
     
     # If no API key is provided and we're not just updating the model
-    elif api_key is None and default_model is None and response_verbosity is None:
+    elif api_key is None and default_model is None and verbosity is None:
         api_key = Prompt.ask("Enter your OpenRouter API key", password=True)
         
         # Validate API key format
@@ -301,7 +301,7 @@ def config_set(
                 console.print("Configuration not updated.")
                 return
     
-    if default_model is None and api_key is not None and response_verbosity is None:
+    if default_model is None and api_key is not None and verbosity is None:
         default_model = Prompt.ask(
             "Enter default model", 
             default="google/gemini-2.0-flash-001"
@@ -334,7 +334,7 @@ def config_set(
         console.print("API Key: [dim]Not set[/dim]")
     
     console.print(f"Default Model: {config.get('default_model', '[dim]Not set[/dim]')}")
-    console.print(f"Response Verbosity: {config.get('response_verbosity', '[dim]Not set[/dim]')}")
+    console.print(f"Response Verbosity: {config.get('verbosity', '[dim]Not set[/dim]')}")
 
 
 @app.command()
@@ -418,9 +418,9 @@ def debug():
         console.print("❌ Default model is not set")
     
     # Check response verbosity
-    response_verbosity = config.get("response_verbosity")
-    if response_verbosity:
-        console.print(f"✅ Response verbosity is set to: {response_verbosity}")
+    verbosity = config.get("verbosity")
+    if verbosity:
+        console.print(f"✅ Response verbosity is set to: {verbosity}")
     else:
         console.print("❌ Response verbosity is not set")
     

@@ -144,8 +144,8 @@ def chat(
             assistant_message = response.get("choices", [{}])[0].get("message", {}).get("content", "")
             
             # Display formatted response
-            console.print("\n[bold green]A:[/bold green]")
-            verbosity = config.get("response_verbosity", "medium")
+            console.print("\n")
+            verbosity = config.get("verbosity", "medium")
             console.print(format_message(assistant_message, verbosity=verbosity))
             
             # Add assistant message to history
@@ -243,8 +243,8 @@ def chat(
             save_conversation(conversation, conversation_history[conversation])
             
             # Display formatted response
-            console.print("\n[bold green]A:[/bold green]")
-            verbosity = config.get("response_verbosity", "medium")
+            console.print("\n")
+            verbosity = config.get("verbosity", "medium")
             console.print(format_message(assistant_message, verbosity=verbosity))
             
         except Exception as e:

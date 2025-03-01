@@ -113,7 +113,7 @@ def chat(
     
     # Add system message if starting new conversation
     if not conversation_history[conversation]:
-        verbosity = config.get("response_verbosity", "brief")
+        verbosity = config.get("verbosity", "medium")
         if debug:
             console.print(f"[yellow]Current verbosity setting: {verbosity}[/yellow]")
             
@@ -259,8 +259,8 @@ def config_set(
     default_model: str = typer.Option(
         None, "--default-model", help="Default model to use"
     ),
-    response_verbosity: str = typer.Option(
-        None, "--response-verbosity",
+    verbosity: str = typer.Option(
+        None, "--verbosity", "-v",
         help="Set response length: 'short' (1-5 lines), 'medium' (5-15 lines), or 'long' (detailed explanations)",
         callback=lambda ctx, param, value: value if value in ["short", "medium", "long"] else typer.BadParameter("Must be 'short', 'medium', or 'long'")
     ),
@@ -316,9 +316,9 @@ def config_set(
         config["default_model"] = default_model
         console.print(f"Default model set to: {default_model}", style="green")
     
-    if response_verbosity is not None:
-        config["response_verbosity"] = response_verbosity
-        console.print(f"Response verbosity set to: {response_verbosity}", style="green")
+    if verbosity is not None:
+        config["verbosity"] = verbosity
+        console.print(f"Verbosity set to: {verbosity}", style="green")
     
     # Save configuration
     save_config(config)

@@ -42,7 +42,7 @@ def get_config_file() -> Path:
 
 
 DEFAULT_CONFIG = {
-    "response_verbosity": "medium",  # 'short', 'medium', or 'long'
+    "verbosity": "medium",  # 'short', 'medium', or 'long'
     "api_key": None,
     "default_model": "google/gemini-2.0-flash-001",
 }

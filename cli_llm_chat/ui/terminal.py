@@ -1,11 +1,10 @@
 """Terminal UI for CLI LLM Chat"""
 
 from prompt_toolkit import Application
-from prompt_toolkit.layout.containers import HSplit, Window
+from prompt_toolkit.layout.containers import HSplit, Window, ScrollOffsets
 from prompt_toolkit.layout.controls import FormattedTextControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.layout.containers import ScrollablePane
 from prompt_toolkit.widgets import TextArea
 from prompt_toolkit.styles import Style
 
@@ -27,7 +26,7 @@ class TerminalUI:
         
         # Create the layout
         self.root_container = HSplit([
-            ScrollablePane(self.output_area),
+            self.output_area,
             self.input_area,
         ])
         

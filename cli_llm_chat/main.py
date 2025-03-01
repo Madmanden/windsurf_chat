@@ -108,6 +108,13 @@ def chat(
         conversation = str(uuid.uuid4())[:8]
         conversation_history[conversation] = []
     
+    # Add system message if starting new conversation
+    if not conversation_history[conversation]:
+        conversation_history[conversation].append({
+            "role": "system",
+            "content": "You are a helpful AI assistant. Always provide brief, concise responses of 1-3 sentences maximum. Do not provide lengthy explanations unless specifically asked."
+        })
+    
     # Single message mode
     if message:
         conversation_history[conversation].append({"role": "user", "content": message})

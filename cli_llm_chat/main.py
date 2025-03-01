@@ -32,6 +32,11 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.application import Application
+from prompt_toolkit.layout import Layout, Window, ScrollablePane, HSplit, VSplit
+from prompt_toolkit.layout.controls import FormattedTextControl
+from prompt_toolkit.layout.containers import FloatContainer, Float
+from prompt_toolkit.key_binding import KeyBindings
 from pathlib import Path
 
 # Load environment variables
@@ -150,12 +155,11 @@ def chat(
             
             assistant_message = response.get("choices", [{}])[0].get("message", {}).get("content", "")
             
-            # Display formatted response with paging support
+            # Display formatted response
             console.print("\n")
             verbosity = config.get("verbosity", "medium")
             formatted_message = format_message(assistant_message, verbosity=verbosity)
-            with console.pager():
-                console.print(formatted_message)
+            console.print(formatted_message)
             
             # Add assistant message to history
             conversation_history[conversation].append({"role": "assistant", "content": assistant_message})
@@ -300,12 +304,11 @@ def chat(
             # Save conversation after each message
             save_conversation(conversation, conversation_history[conversation])
             
-            # Display formatted response with paging support
+            # Display formatted response
             console.print("\n")
             verbosity = config.get("verbosity", "medium")
             formatted_message = format_message(assistant_message, verbosity=verbosity)
-            with console.pager():
-                console.print(formatted_message)
+            console.print(formatted_message)
             
         except Exception as e:
             console.print(f"\n[bold red]Error:[/bold red] {str(e)}")

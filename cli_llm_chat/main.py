@@ -197,6 +197,15 @@ def chat(
             else:
                 console.print("Please provide a name for the conversation", style="red")
             continue
+        elif user_input.lower().startswith("/verbosity "):
+            new_verbosity = user_input[10:].strip().lower()
+            if new_verbosity in ["short", "medium", "long"]:
+                config["verbosity"] = new_verbosity
+                save_config(config)
+                console.print(f"Verbosity changed to: {new_verbosity}", style="green")
+            else:
+                console.print("Invalid verbosity level. Use 'short', 'medium', or 'long'", style="red")
+            continue
         elif user_input.lower() == "/list":
             conversations = list_conversations()
             if conversations:

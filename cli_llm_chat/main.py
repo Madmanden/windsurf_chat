@@ -8,7 +8,6 @@ import os
 import json
 import typer
 from rich.console import Console
-from rich.pager import Pager
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
@@ -46,7 +45,6 @@ app = typer.Typer(
 
 # Initialize Rich console
 console = Console()
-pager = Pager()
 
 # Load configuration
 config = load_config()

@@ -113,9 +113,18 @@ def chat(
     
     # Add system message if starting new conversation
     if not conversation_history[conversation]:
+        verbosity = config.get("response_verbosity", "brief")
+        if debug:
+            console.print(f"[yellow]Current verbosity setting: {verbosity}[/yellow]")
+            
+        system_message = (
+            "You are a helpful AI assistant. IMPORTANT: Always provide brief, concise responses of 1-3 sentences maximum. Keep explanations minimal."
+            if verbosity == "brief" else
+            "You are a helpful AI assistant. IMPORTANT: Provide detailed, thorough responses with in-depth explanations, examples, and relevant context. Take time to explore topics comprehensively."
+        )
         conversation_history[conversation].append({
             "role": "system",
-            "content": "You are a helpful AI assistant. Always provide brief, concise responses of 1-3 sentences maximum. Do not provide lengthy explanations unless specifically asked."
+            "content": system_message
         })
     
     # Single message mode

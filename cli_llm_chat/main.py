@@ -22,7 +22,8 @@ from cli_llm_chat.config.settings import (
     save_config, 
     save_conversation, 
     load_conversation, 
-    list_conversations
+    list_conversations,
+    get_config_file
 )
 import uuid
 import dotenv

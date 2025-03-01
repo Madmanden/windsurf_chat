@@ -27,17 +27,8 @@ def format_message(message: str, verbosity: str = "brief") -> Panel:
     # Process code blocks first
     message = format_code_blocks(message)
     
-    # For brief mode, limit to first 3 sentences
-    if verbosity == "brief":
-        sentences = [s.strip() for s in message.split(".") if s.strip()]
-        brief_msg = ". ".join(sentences[:3])
-        if brief_msg and not brief_msg.endswith("."):
-            brief_msg += "."
-        if len(sentences) > 3:
-            brief_msg += "..."
-        md = Markdown(brief_msg, code_theme="monokai", hyperlinks=True)
-    else:
-        md = Markdown(f"**Detailed Response:**\n\n{message}", code_theme="monokai", hyperlinks=True)
+    # Convert message to Markdown
+    md = Markdown(message, code_theme="monokai", hyperlinks=True)
     
     return Panel(
         md,
